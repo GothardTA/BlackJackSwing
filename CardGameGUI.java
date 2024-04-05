@@ -294,7 +294,7 @@ public class CardGameGUI extends JFrame implements ActionListener {
 
 		// stay button
 		stayButton = new JButton(new ImageIcon(".\\media\\icons\\stay.png"));
-		stayButton.setText("Stand");
+		// stayButton.setText("");
 		panel.add(stayButton);
 		stayButton.setBounds(BUTTON_LEFT+20, DEFAULT_HEIGHT-BUTTON_HEIGHT-PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
 		stayButton.setFont(new Font("SansSerif", Font.BOLD, 24));
@@ -303,7 +303,7 @@ public class CardGameGUI extends JFrame implements ActionListener {
 
 		// hit button
 		hitButton = new JButton(new ImageIcon(".\\media\\icons\\hit.png"));
-		hitButton.setText("Hit");
+		// hitButton.setText("");
 		panel.add(hitButton);
 		hitButton.setBounds(DEFAULT_WIDTH-BUTTON_WIDTH-PADDING, DEFAULT_HEIGHT-BUTTON_HEIGHT-PADDING, BUTTON_WIDTH, BUTTON_HEIGHT);
 		hitButton.setFont(new Font("SansSerif", Font.BOLD, 24));
@@ -312,7 +312,7 @@ public class CardGameGUI extends JFrame implements ActionListener {
 
 		// deal button
 		dealButton = new JButton(new ImageIcon(".\\media\\icons\\deal.png"));
-		dealButton.setText("Deal");
+		// dealButton.setText("");
 		panel.add(dealButton);
 		dealButton.setBounds((DEFAULT_WIDTH/2)-(BUTTON_WIDTH/2), DEFAULT_HEIGHT-(BUTTON_HEIGHT * 2)-(PADDING * 2), BUTTON_WIDTH, BUTTON_HEIGHT);
 		dealButton.setFont(new Font("SansSerif", Font.BOLD, 24));
@@ -321,7 +321,7 @@ public class CardGameGUI extends JFrame implements ActionListener {
 		
 		// bet button
 		betButton = new JButton(new ImageIcon(".\\media\\icons\\bet.png"));
-		betButton.setText("Bet");
+		// betButton.setText("");
 		panel.add(betButton);
 		betButton.setBounds((DEFAULT_WIDTH/2)-(BUTTON_WIDTH/2), DEFAULT_HEIGHT-(BUTTON_HEIGHT * 2)-(PADDING * 2), BUTTON_WIDTH, BUTTON_HEIGHT);
 		betButton.setFont(new Font("SansSerif", Font.BOLD, 24));
