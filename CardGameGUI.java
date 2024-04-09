@@ -84,6 +84,7 @@ public class CardGameGUI extends JFrame implements ActionListener {
 	private boolean playerStayed = false;
 	private boolean gameOver = false;
 	private boolean hideCards = true;
+	private boolean playerBankrupt = false;
 
 	private int playerMoney = 100;
 	private int playerBetAmount = 0;
@@ -253,6 +254,15 @@ public class CardGameGUI extends JFrame implements ActionListener {
 		} else {
 			endGameMsg.setText("");
 			endGameMsg.setForeground(Color.BLACK);
+		}
+
+		if (playerBankrupt) {
+			endGameMsg.setText("You went bankrupt!");
+			endGameMsg.setFont( new Font("SansSerif", Font.BOLD, 36) );
+			int textSize = panel.getGraphics().getFontMetrics( new Font("SansSerif", Font.BOLD, 36) ).stringWidth("You went bankrupt!");
+			endGameMsg.setBounds( (DEFAULT_WIDTH / 2) - (textSize / 2), DEFAULT_HEIGHT / 2 + 100, textSize, 30);
+			endGameMsg.setForeground(Color.RED);
+			endGameMsg.setVisible(true);
 		}
 
 		endGameMsg.setVisible(true);
@@ -559,10 +569,10 @@ public class CardGameGUI extends JFrame implements ActionListener {
 	}
 
 	private void dealActions() {
+		repaint();
 		if (playerMoney <= 0) {
-			endGameMsg.setText("You are out of money!");
+			playerBankrupt = true;
 			repaint();
-			// you lost
 		}
 		playerCards = new ArrayList<Card>();
 		dealerCards = new ArrayList<Card>();
