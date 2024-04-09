@@ -559,6 +559,11 @@ public class CardGameGUI extends JFrame implements ActionListener {
 	}
 
 	private void dealActions() {
+		if (playerMoney <= 0) {
+			endGameMsg.setText("You are out of money!");
+			repaint();
+			// you lost
+		}
 		playerCards = new ArrayList<Card>();
 		dealerCards = new ArrayList<Card>();
 
