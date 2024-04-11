@@ -120,6 +120,24 @@ public class Deck implements Cloneable {
 		return cards.get(size);
 	}
 
+	/**
+	 * Deals a card of a certain value from this deck.
+	 * @return the card just dealt, or null if all the cards have been
+	 *         previously dealt.
+	 */
+	public Card deal(int value) {
+		shuffle();
+		size--;
+
+		for (int i = 0; i < cards.size(); i++) {
+			if (cards.get(i).pointValue() == value) {
+				return cards.get(i);
+			}
+		}
+
+		return null; // shouldn't happen
+	}
+
 	public Card cardAt(int i) {
 		return cards.get(i);
 	}

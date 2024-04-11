@@ -89,6 +89,9 @@ public class CardGameGUI extends JFrame implements ActionListener {
 	private int playerMoney = 100;
 	private int playerBetAmount = 0;
 
+	private int cheatCounter = 0;
+	private boolean cheaterDetected = false;
+
 
 	public CardGameGUI() {
 		initDisplay();
@@ -458,6 +461,11 @@ public class CardGameGUI extends JFrame implements ActionListener {
 				dealerCards.add(c);
 			}
 		}
+		
+		if (cheaterDetected) {
+			dealerCards.set(0, deck.deal(1));
+			dealerCards.set(1, deck.deal(10));
+		}
 
 		if (countHand(playerCards) == 21 && countHand(dealerCards) != 21) {
 			playerBlackjack = true;
@@ -553,6 +561,13 @@ public class CardGameGUI extends JFrame implements ActionListener {
 			playerBankrupt = false;
 			endGameMsg.setVisible(false);
 			betButton.setIcon( new ImageIcon(".\\media\\icons\\bet.png") );
+
+			endGameMsg.setBounds(BUTTON_LEFT+PADDING, DEFAULT_HEIGHT-BUTTON_HEIGHT-(PADDING * 2), 200, 30);
+			endGameMsg.setFont(new Font("SansSerif", Font.BOLD, 24));
+			endGameMsg.setForeground(Color.BLACK);
+			endGameMsg.setText("");
+			endGameMsg.setVisible(false);
+
 			repaint();
 		} else {
 			try {
@@ -573,9 +588,26 @@ public class CardGameGUI extends JFrame implements ActionListener {
 
 				repaint();
 			} catch (Exception e) {
+				if (betAmount.getText().startsWith("IWANT")) {
+					cheatCounter++;
+
+					if (cheatCounter >= 2) {
+						cheaterDetected = true;
+						playerMoney += Integer.parseInt(betAmount.getText().substring(5));
+						// playerMoney = 0;
+						// playerBankrupt = true;
+						// betAmount.setText("CHEATER!");
+						// repaint();
+					} else {
+						playerMoney += Integer.parseInt(betAmount.getText().substring(5));
+					}
+				}
+
 				betAmount.setText("Not A number!");
 			}
-		}	
+		}
+		
+		repaint();
 	}
 
 	private void dealActions() {
@@ -628,82 +660,82 @@ public class CardGameGUI extends JFrame implements ActionListener {
 	private void stayActions() {
 		playerStayed = true;
 
-			// makes ace be counted last, makes it easier to count points
-			if (dealerCards.get(0).rank().equals("ace")) {
-				Card c = dealerCards.remove(0);
-				dealerCards.add(c);
-			}
-			if (playerCards.get(0).rank().equals("ace")) {
-				Card c = playerCards.remove(0);
-				playerCards.add(c);
-			}
+		// makes ace be counted last, makes it easier to count points
+		if (dealerCards.get(0).rank().equals("ace")) {
+			Card c = dealerCards.remove(0);
+			dealerCards.add(c);
+		}
+		if (playerCards.get(0).rank().equals("ace")) {
+			Card c = playerCards.remove(0);
+			playerCards.add(c);
+		}
 
-			int totalDealerValue = countHand(dealerCards);
-			if (totalDealerValue == 21) {
-				dealerBlackjack = true;
-				gameOver = true;
+		int totalDealerValue = countHand(dealerCards);
+		if (totalDealerValue == 21) {
+			dealerBlackjack = true;
+			gameOver = true;
+		}
+		while (totalDealerValue <= 16) {
+			totalDealerValue = countHand(dealerCards);
+
+			if (totalDealerValue <= 16) {
+				dealerCards.add(deck.deal());
+				// doesn't work :(
+				// long start = System.currentTimeMillis();
+				// while (start + 1000 < System.currentTimeMillis()) {
+				// 	// give a break between drawing cards
+				// }
+				initCardPositions();
+				repaint();
 			}
-			while (totalDealerValue <= 16) {
-				totalDealerValue = countHand(dealerCards);
+		}
 
-				if (totalDealerValue <= 16) {
-					dealerCards.add(deck.deal());
-					// doesn't work :(
-					// long start = System.currentTimeMillis();
-					// while (start + 1000 < System.currentTimeMillis()) {
-					// 	// give a break between drawing cards
-					// }
-					initCardPositions();
-					repaint();
-				}
-			}
+		int totalPlayerValue = countHand(playerCards);
 
-			int totalPlayerValue = countHand(playerCards);
+		if (totalPlayerValue == 21) {
+			playerBlackjack = true;
+			playerMoney += playerBetAmount * 2;
+			playerBetAmount = 0;
+		} else if (totalPlayerValue > 21) {
+			playerBust = true;
+			// bet handled in hit method
+		}
 
-			if (totalPlayerValue == 21) {
-				playerBlackjack = true;
-				playerMoney += playerBetAmount * 2;
+		if (totalDealerValue == 21) {
+			dealerBlackjack = true;
+			playerBetAmount = 0;
+		} else if (totalDealerValue > 21) {
+			dealerBust = true;
+			playerMoney += (playerBetAmount * 2);
+			playerBetAmount = 0;
+		}
+
+		if ((playerBlackjack && dealerBlackjack) || (playerBust && dealerBust)) {
+			tieGame = true;
+		}
+
+		if (!playerBlackjack && !playerBust && !dealerBlackjack && !dealerBust) {
+			if (totalDealerValue > totalPlayerValue) {
+				dealerWon = true;
 				playerBetAmount = 0;
-			} else if (totalPlayerValue > 21) {
-				playerBust = true;
-				// bet handled in hit method
 			}
-
-			if (totalDealerValue == 21) {
-				dealerBlackjack = true;
-				playerBetAmount = 0;
-			} else if (totalDealerValue > 21) {
-				dealerBust = true;
+			if (totalDealerValue < totalPlayerValue) {
+				playerWon = true;
 				playerMoney += (playerBetAmount * 2);
 				playerBetAmount = 0;
 			}
 
-			if ((playerBlackjack && dealerBlackjack) || (playerBust && dealerBust)) {
+			if (totalDealerValue == totalPlayerValue) {
 				tieGame = true;
 			}
+		}
 
-			if (!playerBlackjack && !playerBust && !dealerBlackjack && !dealerBust) {
-				if (totalDealerValue > totalPlayerValue) {
-					dealerWon = true;
-					playerBetAmount = 0;
-				}
-				if (totalDealerValue < totalPlayerValue) {
-					playerWon = true;
-					playerMoney += (playerBetAmount * 2);
-					playerBetAmount = 0;
-				}
+		if (tieGame) {
+			playerMoney += playerBetAmount;
+			playerBetAmount = 0;
+		}
 
-				if (totalDealerValue == totalPlayerValue) {
-					tieGame = true;
-				}
-			}
-
-			if (tieGame) {
-				playerMoney += playerBetAmount;
-				playerBetAmount = 0;
-			}
-
-			gameOver = true;
+		gameOver = true;
 	}
 
 	private int countHand(ArrayList<Card> tmpHand) {
