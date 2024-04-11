@@ -592,12 +592,9 @@ public class CardGameGUI extends JFrame implements ActionListener {
 					cheatCounter++;
 
 					if (cheatCounter >= 2) {
+						dealCards();
 						cheaterDetected = true;
 						playerMoney += Integer.parseInt(betAmount.getText().substring(5));
-						// playerMoney = 0;
-						// playerBankrupt = true;
-						// betAmount.setText("CHEATER!");
-						// repaint();
 					} else {
 						playerMoney += Integer.parseInt(betAmount.getText().substring(5));
 					}
