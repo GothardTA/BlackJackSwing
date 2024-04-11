@@ -260,9 +260,11 @@ public class CardGameGUI extends JFrame implements ActionListener {
 			endGameMsg.setText("You went bankrupt!");
 			endGameMsg.setFont( new Font("SansSerif", Font.BOLD, 36) );
 			int textSize = panel.getGraphics().getFontMetrics( new Font("SansSerif", Font.BOLD, 36) ).stringWidth("You went bankrupt!");
-			endGameMsg.setBounds( (DEFAULT_WIDTH / 2) - (textSize / 2), DEFAULT_HEIGHT / 2 + 100, textSize, 30);
+			endGameMsg.setBounds( (DEFAULT_WIDTH / 2) - (textSize / 2), DEFAULT_HEIGHT / 2 + 80, textSize, 30);
 			endGameMsg.setForeground(Color.RED);
 			endGameMsg.setVisible(true);
+
+			betButton.setIcon( new ImageIcon(".\\media\\icons\\restart.png") );
 		}
 
 		endGameMsg.setVisible(true);
@@ -546,26 +548,34 @@ public class CardGameGUI extends JFrame implements ActionListener {
 	}
 
 	private void betActions() {
-		try {
-			playerBetAmount += Integer.parseInt(betAmount.getText());
-			
-			if (playerMoney - playerBetAmount < 0) {
-				betAmount.setText("Too much!");
-				playerBetAmount = 0;
-			} else if (playerBetAmount < 0) {
-				betAmount.setText("No Cheating!");
-				playerBetAmount = 0;
-			} else {
-				playerMoney -= playerBetAmount;
-				betButton.setVisible(false);
-				hideCards = false;
-				betAmount.setText("" + playerBetAmount);
-			}
-
+		if (playerBankrupt) {
+			playerMoney = 100;
+			playerBankrupt = false;
+			endGameMsg.setVisible(false);
+			betButton.setIcon( new ImageIcon(".\\media\\icons\\bet.png") );
 			repaint();
-		} catch (Exception e) {
-			betAmount.setText("Not A number!");
-		}
+		} else {
+			try {
+				playerBetAmount += Integer.parseInt(betAmount.getText());
+				
+				if (playerMoney - playerBetAmount < 0) {
+					betAmount.setText("Too much!");
+					playerBetAmount = 0;
+				} else if (playerBetAmount < 0) {
+					betAmount.setText("No Cheating!");
+					playerBetAmount = 0;
+				} else {
+					playerMoney -= playerBetAmount;
+					betButton.setVisible(false);
+					hideCards = false;
+					betAmount.setText("" + playerBetAmount);
+				}
+
+				repaint();
+			} catch (Exception e) {
+				betAmount.setText("Not A number!");
+			}
+		}	
 	}
 
 	private void dealActions() {
