@@ -300,7 +300,8 @@ public class CardGameGUI extends JFrame implements ActionListener {
 				super.paintComponent(g);
 			}
 		};
-
+		
+		panel.addMouseListener(new MyMouseListener());
 		setTitle("Blackjack");
 
 		this.setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
@@ -588,17 +589,19 @@ public class CardGameGUI extends JFrame implements ActionListener {
 
 				repaint();
 			} catch (Exception e) {
-				if (betAmount.getText().startsWith("IWANT")) {
-					cheatCounter++;
+				try {
+					if (betAmount.getText().startsWith("IWANT")) {
+						cheatCounter++;
 
-					if (cheatCounter >= 2) {
-						dealCards();
-						cheaterDetected = true;
-						playerMoney += Integer.parseInt(betAmount.getText().substring(5));
-					} else {
-						playerMoney += Integer.parseInt(betAmount.getText().substring(5));
+						if (cheatCounter >= 2) {
+							dealCards();
+							cheaterDetected = true;
+							playerMoney += Integer.parseInt(betAmount.getText().substring(5));
+						} else {
+							playerMoney += Integer.parseInt(betAmount.getText().substring(5));
+						}
 					}
-				}
+				} catch (Exception f) {}
 
 				betAmount.setText("Not A number!");
 			}
@@ -775,6 +778,7 @@ public class CardGameGUI extends JFrame implements ActionListener {
 
 	private class MyMouseListener implements MouseListener {
 		public void mouseClicked(MouseEvent e) {
+			System.out.println("(" + e.getX() + ", " + e.getY() + ")");
 		}
 
 		public void mouseExited(MouseEvent e) {
