@@ -778,16 +778,18 @@ public class CardGameGUI extends JFrame implements ActionListener {
 
 	private class MyMouseListener implements MouseListener {
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("(" + e.getX() + ", " + e.getY() + ")");
+			// System.out.println("(" + e.getX() + ", " + e.getY() + ")");
 		}
 
 		public void mouseExited(MouseEvent e) {
+			// System.out.println("Exited");
 		}
 
 		public void mouseReleased(MouseEvent e) {
 		}
 
 		public void mouseEntered(MouseEvent e) {
+			// System.out.println("Entered");
 		}
 
 		public void mousePressed(MouseEvent e) {
